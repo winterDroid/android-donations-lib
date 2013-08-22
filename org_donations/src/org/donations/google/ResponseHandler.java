@@ -29,7 +29,7 @@ import org.donations.google.Consts.ResponseCode;
  * This class contains the methods that handle responses from Android Market. The implementation of
  * these methods is specific to a particular application. The methods in this example update the
  * database and, if the main application has registered a {@llink PurchaseObserver}, will also
- * update the UI. An application might also want to forward some responses on to its own server, and
+ * update the UI. An application might also want to forward some responses on to its own de.hwr.timetable.server.servlets.server, and
  * that could be done here (in a background thread) but this example does not do that.
  * <p/>
  * You should modify and obfuscate this code before using it.
@@ -129,7 +129,7 @@ public class ResponseHandler {
         synchronized (ResponseHandler.class) {
           if (sPurchaseObserver != null) {
             sPurchaseObserver.postPurchaseStateChange(purchaseState, productId,
-                orderId, purchaseTime, developerPayload);
+                                                      orderId, purchaseTime, developerPayload);
           }
         }
       }
@@ -139,7 +139,7 @@ public class ResponseHandler {
   /**
    * This is called when we receive a response code from Android Market for a RequestPurchase
    * request that we made. This is used for reporting various errors and also for acknowledging
-   * that an order was sent successfully to the server. This is NOT used for any purchase state
+   * that an order was sent successfully to the de.hwr.timetable.server.servlets.server. This is NOT used for any purchase state
    * changes. All purchase state changes are received in the {@link BillingReceiver} and are
    * handled in {@link Security#verifyPurchase(String, String)}.
    *

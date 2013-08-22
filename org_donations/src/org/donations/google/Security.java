@@ -35,7 +35,7 @@ import java.util.HashSet;
 
 /**
  * Security-related methods. For a secure implementation, all of this code should be implemented on
- * a server that communicates with the application on the device. For the sake of simplicity and
+ * a de.hwr.timetable.server.servlets.server that communicates with the application on the device. For the sake of simplicity and
  * clarity of this example, this code is included here and is executed on the device. If you must
  * verify the purchases on the phone, you should obfuscate this code to make it harder for an
  * attacker to replace the code with stubs that treat all purchases as verified.
@@ -43,12 +43,12 @@ import java.util.HashSet;
 public class Security {
   private static final String TAG = "Security";
 
-  private static final String KEY_FACTORY_ALGORITHM = "RSA";
-  private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
-  private static final SecureRandom RANDOM = new SecureRandom();
+  private static final String       KEY_FACTORY_ALGORITHM = "RSA";
+  private static final String       SIGNATURE_ALGORITHM   = "SHA1withRSA";
+  private static final SecureRandom RANDOM                = new SecureRandom();
 
   /**
-   * This keeps track of the nonces that we generated and sent to the server. We need to keep
+   * This keeps track of the nonces that we generated and sent to the de.hwr.timetable.server.servlets.server. We need to keep
    * track of these until we get back the purchase state and send a confirmation message back to
    * Android Market. If we are killed and lose this list of nonces, it is not fatal. Android
    * Market will send us a new "notify" message and we will re-generate a new nonce. This has to
@@ -61,11 +61,11 @@ public class Security {
    */
   public static class VerifiedPurchase {
     public PurchaseState purchaseState;
-    public String notificationId;
-    public String productId;
-    public String orderId;
-    public long purchaseTime;
-    public String developerPayload;
+    public String        notificationId;
+    public String        productId;
+    public String        orderId;
+    public long          purchaseTime;
+    public String        developerPayload;
 
     public VerifiedPurchase(PurchaseState purchaseState, String notificationId,
                             String productId, String orderId, long purchaseTime, String developerPayload) {
@@ -124,13 +124,13 @@ public class Security {
        * construct the key at runtime from pieces or use bit manipulation (for example, XOR
        * with some other string) to hide the actual key. The key itself is not secret
        * information, but we don't want to make it easy for an adversary to replace the public
-       * key with one of their own and then fake messages from the server.
+       * key with one of their own and then fake messages from the de.hwr.timetable.server.servlets.server.
        *
        * Generally, encryption keys / passwords should only be kept in memory long enough to
        * perform the operation they need to perform.
        */
       String base64EncodedPublicKey = DonationsUtils.getResourceString(context,
-          "donations__google_pubkey");
+                                                                       "donations__google_pubkey");
       PublicKey key = Security.generatePublicKey(base64EncodedPublicKey);
       verified = Security.verify(key, signedData, signature);
       if (!verified) {
@@ -183,7 +183,7 @@ public class Security {
           continue;
         }
         purchases.add(new VerifiedPurchase(purchaseState, notifyId, productId, orderId,
-            purchaseTime, developerPayload));
+                                           purchaseTime, developerPayload));
       }
     } catch (JSONException e) {
       Log.e(TAG, "JSON exception: ", e);
@@ -216,12 +216,12 @@ public class Security {
   }
 
   /**
-   * Verifies that the signature from the server matches the computed signature on the data.
+   * Verifies that the signature from the de.hwr.timetable.server.servlets.server matches the computed signature on the data.
    * Returns true if the data is correctly signed.
    *
    * @param publicKey  public key associated with the developer account
-   * @param signedData signed data from server
-   * @param signature  server signature
+   * @param signedData signed data from de.hwr.timetable.server.servlets.server
+   * @param signature  de.hwr.timetable.server.servlets.server signature
    * @return true if the data and signature match
    */
   public static boolean verify(PublicKey publicKey, String signedData, String signature) {

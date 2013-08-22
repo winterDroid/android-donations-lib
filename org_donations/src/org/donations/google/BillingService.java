@@ -76,8 +76,8 @@ public class BillingService extends Service implements ServiceConnection {
    * connected.
    */
   abstract class BillingRequest {
-    private final int mStartId;
-    protected long mRequestId;
+    private final int  mStartId;
+    protected     long mRequestId;
 
     public BillingRequest(int startId) {
       mStartId = startId;
@@ -169,7 +169,7 @@ public class BillingService extends Service implements ServiceConnection {
 
     protected void logResponseCode(String method, Bundle response) {
       ResponseCode responseCode = ResponseCode.valueOf(response
-          .getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE));
+                                                           .getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE));
       if (Consts.DEBUG) {
         Log.e(TAG, method + " received " + responseCode.toString());
       }
@@ -196,11 +196,11 @@ public class BillingService extends Service implements ServiceConnection {
         // http://stackoverflow.com/questions/5576733/in-app-billing-is-not-working-on-g1
         int responseCode = response.containsKey(Consts.BILLING_RESPONSE_RESPONSE_CODE) ? response
             .getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE, -123)
-            : ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal();
+                                                                                       : ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal();
         if (Consts.DEBUG) {
           Log.i(TAG,
-              "CheckBillingSupported response code: "
-                  + ResponseCode.valueOf(responseCode));
+                "CheckBillingSupported response code: "
+                + ResponseCode.valueOf(responseCode));
         }
         boolean billingSupported = (responseCode == ResponseCode.RESULT_OK.ordinal());
         ResponseHandler.checkBillingSupportedResponse(billingSupported);
@@ -253,7 +253,7 @@ public class BillingService extends Service implements ServiceConnection {
         ResponseHandler.buyPageIntentResponse(pendingIntent, intent);
 
         return response.getLong(Consts.BILLING_RESPONSE_REQUEST_ID,
-            Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
+                                Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
       } catch (NullPointerException e) {
         initialiseMarket();
         return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
@@ -267,7 +267,7 @@ public class BillingService extends Service implements ServiceConnection {
   }
 
   /**
-   * Wrapper class that confirms a list of notifications to the server.
+   * Wrapper class that confirms a list of notifications to the de.hwr.timetable.server.servlets.server.
    */
   class ConfirmNotifications extends BillingRequest {
     final String[] mNotifyIds;
@@ -286,7 +286,7 @@ public class BillingService extends Service implements ServiceConnection {
 
         logResponseCode("confirmNotifications", response);
         return response.getLong(Consts.BILLING_RESPONSE_REQUEST_ID,
-            Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
+                                Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
       } catch (NullPointerException e) {
         initialiseMarket();
       }
@@ -295,7 +295,7 @@ public class BillingService extends Service implements ServiceConnection {
   }
 
   /**
-   * Wrapper class that sends a GET_PURCHASE_INFORMATION message to the server.
+   * Wrapper class that sends a GET_PURCHASE_INFORMATION message to the de.hwr.timetable.server.servlets.server.
    */
   class GetPurchaseInformation extends BillingRequest {
     long mNonce;
@@ -317,7 +317,7 @@ public class BillingService extends Service implements ServiceConnection {
         Bundle response = mService.sendBillingRequest(request);
         logResponseCode("getPurchaseInformation", response);
         return response.getLong(Consts.BILLING_RESPONSE_REQUEST_ID,
-            Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
+                                Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
       } catch (NullPointerException e) {
         initialiseMarket();
         return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
@@ -332,7 +332,7 @@ public class BillingService extends Service implements ServiceConnection {
   }
 
   /**
-   * Wrapper class that sends a RESTORE_TRANSACTIONS message to the server.
+   * Wrapper class that sends a RESTORE_TRANSACTIONS message to the de.hwr.timetable.server.servlets.server.
    */
   public class RestoreTransactions extends BillingRequest {
     long mNonce;
@@ -354,7 +354,7 @@ public class BillingService extends Service implements ServiceConnection {
         Bundle response = mService.sendBillingRequest(request);
         logResponseCode("restoreTransactions", response);
         return response.getLong(Consts.BILLING_RESPONSE_REQUEST_ID,
-            Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
+                                Consts.BILLING_RESPONSE_INVALID_REQUEST_ID);
       } catch (NullPointerException e) {
         initialiseMarket();
         return Consts.BILLING_RESPONSE_INVALID_REQUEST_ID;
@@ -428,7 +428,7 @@ public class BillingService extends Service implements ServiceConnection {
         confirmNotifications(startId, notifyIds);
       } else if (Consts.ACTION_GET_PURCHASE_INFORMATION.equals(action)) {
         String notifyId = intent.getStringExtra(Consts.NOTIFICATION_ID);
-        getPurchaseInformation(startId, new String[]{notifyId});
+        getPurchaseInformation(startId, new String[] {notifyId});
       } else if (Consts.ACTION_PURCHASE_STATE_CHANGED.equals(action)) {
         String signedData = intent.getStringExtra(Consts.INAPP_SIGNED_DATA);
         String signature = intent.getStringExtra(Consts.INAPP_SIGNATURE);
@@ -436,7 +436,7 @@ public class BillingService extends Service implements ServiceConnection {
       } else if (Consts.ACTION_RESPONSE_CODE.equals(action)) {
         long requestId = intent.getLongExtra(Consts.INAPP_REQUEST_ID, -1);
         int responseCodeIndex = intent.getIntExtra(Consts.INAPP_RESPONSE_CODE,
-            ResponseCode.RESULT_ERROR.ordinal());
+                                                   ResponseCode.RESULT_ERROR.ordinal());
         ResponseCode responseCode = ResponseCode.valueOf(responseCodeIndex);
         checkResponseCode(requestId, responseCode);
       }
@@ -454,8 +454,8 @@ public class BillingService extends Service implements ServiceConnection {
         Log.i(TAG, "binding to Market billing service");
       }
       boolean bindResult = bindService(new Intent(Consts.MARKET_BILLING_SERVICE_ACTION),
-          this, // ServiceConnection.
-          Context.BIND_AUTO_CREATE);
+                                       this, // ServiceConnection.
+                                       Context.BIND_AUTO_CREATE);
 
       if (bindResult) {
         return true;
@@ -504,8 +504,8 @@ public class BillingService extends Service implements ServiceConnection {
 
   /**
    * Confirms receipt of a purchase state change. Each {@code notifyId} is an opaque identifier
-   * that came from the server. This method sends those identifiers back to the
-   * MarketBillingService, which ACKs them to the server. Returns false if there was an error
+   * that came from the de.hwr.timetable.server.servlets.server. This method sends those identifiers back to the
+   * MarketBillingService, which ACKs them to the de.hwr.timetable.server.servlets.server. Returns false if there was an error
    * trying to connect to the MarketBillingService.
    *
    * @param startId   an identifier for the invocation instance of this service
@@ -518,7 +518,7 @@ public class BillingService extends Service implements ServiceConnection {
 
   /**
    * Gets the purchase information. This message includes a list of notification IDs sent to us by
-   * Android Market, which we include in our request. The server responds with the purchase
+   * Android Market, which we include in our request. The de.hwr.timetable.server.servlets.server responds with the purchase
    * information, encoded as a JSON string, and sends that to the {@link BillingReceiver} in an
    * intent with the action {@link Consts#ACTION_PURCHASE_STATE_CHANGED}. Returns false if there
    * was an error trying to connect to the MarketBillingService.
@@ -553,7 +553,7 @@ public class BillingService extends Service implements ServiceConnection {
         notifyList.add(vp.notificationId);
       }
       ResponseHandler.purchaseResponse(this, vp.purchaseState, vp.productId, vp.orderId,
-          vp.purchaseTime, vp.developerPayload);
+                                       vp.purchaseTime, vp.developerPayload);
     }
     if (!notifyList.isEmpty()) {
       String[] notifyIds = notifyList.toArray(new String[notifyList.size()]);
@@ -564,7 +564,7 @@ public class BillingService extends Service implements ServiceConnection {
   /**
    * This is called when we receive a response code from Android Market for a request that we
    * made. This is used for reporting various errors and for acknowledging that an order was sent
-   * to the server. This is NOT used for any purchase state changes. All purchase state changes
+   * to the de.hwr.timetable.server.servlets.server. This is NOT used for any purchase state changes. All purchase state changes
    * are received in the {@link BillingReceiver} and passed to this service, where they are
    * handled in {@link #purchaseStateChanged(int, String, String)}.
    *

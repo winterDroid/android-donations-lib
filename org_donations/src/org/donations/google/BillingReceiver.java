@@ -57,7 +57,7 @@ public class BillingReceiver extends BroadcastReceiver {
     } else if (Consts.ACTION_RESPONSE_CODE.equals(action)) {
       long requestId = intent.getLongExtra(Consts.INAPP_REQUEST_ID, -1);
       int responseCodeIndex = intent.getIntExtra(Consts.INAPP_RESPONSE_CODE,
-          ResponseCode.RESULT_ERROR.ordinal());
+                                                 ResponseCode.RESULT_ERROR.ordinal());
       checkResponseCode(context, requestId, responseCodeIndex);
     } else {
       Log.w(TAG, "unexpected action: " + action);
@@ -66,7 +66,7 @@ public class BillingReceiver extends BroadcastReceiver {
 
   /**
    * This is called when Android Market sends information about a purchase state change. The
-   * signedData parameter is a plaintext JSON string that is signed by the server with the
+   * signedData parameter is a plaintext JSON string that is signed by the de.hwr.timetable.server.servlets.server with the
    * developer's private key. The signature for the signed data is passed in the signature
    * parameter.
    *
@@ -100,7 +100,7 @@ public class BillingReceiver extends BroadcastReceiver {
   }
 
   /**
-   * This is called when Android Market sends a server response code. The BillingService can then
+   * This is called when Android Market sends a de.hwr.timetable.server.servlets.server response code. The BillingService can then
    * report the status of the response if desired.
    *
    * @param context           the context

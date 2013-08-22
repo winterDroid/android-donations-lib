@@ -47,23 +47,23 @@ import org.donations.google.ResponseHandler;
 
 public class DonationsFragment extends SherlockFragment {
   private DonatePurchaseObserver mDonatePurchaseObserver;
-  private Handler mHandler;
+  private Handler                mHandler;
 
-  private Spinner mGoogleSpinner;
+  private Spinner  mGoogleSpinner;
   private TextView mFlattrUrl;
 
   private BillingService mBillingService;
 
   private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 1;
-  private static final int DIALOG_THANKS = 2;
+  private static final int DIALOG_THANKS                   = 2;
 
   /**
    * An array of product list entries for the products that can be purchased.
    */
   private static String[] CATALOG;
 
-  private static final String[] CATALOG_DEBUG = new String[]{"android.test.purchased",
-      "android.test.canceled", "android.test.refunded", "android.test.item_unavailable"};
+  private static final String[] CATALOG_DEBUG = new String[] {"android.test.purchased",
+                                                              "android.test.canceled", "android.test.refunded", "android.test.item_unavailable"};
 
   private boolean mGoogleEnabled;
 
@@ -88,14 +88,14 @@ public class DonationsFragment extends SherlockFragment {
     public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
                                       final String orderId, long purchaseTime, String developerPayload) {
       Log.d(DonationsUtils.TAG, "onPurchaseStateChange() itemId: " + itemId + " "
-          + purchaseState);
+                                + purchaseState);
     }
 
     @Override
     public void onRequestPurchaseResponse(RequestPurchase request, ResponseCode responseCode) {
       Log.d(DonationsUtils.TAG, request.mProductId + ": " + responseCode);
       if (responseCode == ResponseCode.RESULT_OK) {
-        Log.d(DonationsUtils.TAG, "purchase was successfully sent to server");
+        Log.d(DonationsUtils.TAG, "purchase was successfully sent to de.hwr.timetable.server.servlets.server");
         displayDialog(DIALOG_THANKS);
       } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
         Log.d(DonationsUtils.TAG, "user canceled purchase");
@@ -138,7 +138,7 @@ public class DonationsFragment extends SherlockFragment {
 
         /* Google */
     mGoogleEnabled = DonationsUtils.getResourceBoolean(getActivity(),
-        "donations__google_enabled");
+                                                       "donations__google_enabled");
     if (mGoogleEnabled) {
       // inflate google view into stub
       ViewStub googleViewStub = (ViewStub) getActivity().findViewById(
@@ -147,14 +147,14 @@ public class DonationsFragment extends SherlockFragment {
 
       // get catalog from xml config
       CATALOG = DonationsUtils.getResourceStringArray(getActivity(),
-          "donations__google_catalog");
+                                                      "donations__google_catalog");
 
       // choose donation amount
       mGoogleSpinner = (Spinner) getActivity().findViewById(
           R.id.donations__google_android_market_spinner);
       ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-          R.array.donations__google_android_market_promt_array,
-          android.R.layout.simple_spinner_item);
+                                                                           R.array.donations__google_android_market_promt_array,
+                                                                           android.R.layout.simple_spinner_item);
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       mGoogleSpinner.setAdapter(adapter);
 
@@ -228,16 +228,16 @@ public class DonationsFragment extends SherlockFragment {
     uriBuilder.appendQueryParameter("cmd", "_donations");
 
     uriBuilder.appendQueryParameter("business",
-        DonationsUtils.getResourceString(getActivity(), "donations__paypal_user"));
+                                    DonationsUtils.getResourceString(getActivity(), "donations__paypal_user"));
     uriBuilder.appendQueryParameter("lc", "US");
     uriBuilder.appendQueryParameter("item_name",
-        DonationsUtils.getResourceString(getActivity(), "donations__paypal_item_name"));
+                                    DonationsUtils.getResourceString(getActivity(), "donations__paypal_item_name"));
     uriBuilder.appendQueryParameter("no_note", "1");
     // uriBuilder.appendQueryParameter("no_note", "0");
     // uriBuilder.appendQueryParameter("cn", "Note to the developer");
     uriBuilder.appendQueryParameter("no_shipping", "1");
     uriBuilder.appendQueryParameter("currency_code",
-        DonationsUtils.getResourceString(getActivity(), "donations__paypal_currency_code"));
+                                    DonationsUtils.getResourceString(getActivity(), "donations__paypal_currency_code"));
     // uriBuilder.appendQueryParameter("bn", "PP-DonationsBF:btn_donate_LG.gif:NonHosted");
     Uri payPalUri = uriBuilder.build();
 
@@ -306,12 +306,12 @@ public class DonationsFragment extends SherlockFragment {
     dialog.setMessage(message);
     dialog.setCancelable(true);
     dialog.setNeutralButton(R.string.donations__button_close,
-        new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+                            new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                              }
+                            });
     dialog.show();
   }
 
@@ -379,7 +379,7 @@ public class DonationsFragment extends SherlockFragment {
 
     // get flattr values from xml config
     String projectUrl = DonationsUtils.getResourceString(getActivity(),
-        "donations__flattr_project_url");
+                                                         "donations__flattr_project_url");
     String flattrUrl = DonationsUtils.getResourceString(getActivity(), "donations__flattr_url");
 
     // make text white and background transparent
@@ -398,21 +398,21 @@ public class DonationsFragment extends SherlockFragment {
     mFlattrUrl.setText(flattrScheme + flattrUrl);
 
     String flattrJavascript = "<script type='text/javascript'>"
-        + "/* <![CDATA[ */"
-        + "(function() {"
-        + "var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];"
-        + "s.type = 'text/javascript';" + "s.async = true;" + "s.src = '" + flattrScheme
-        + "api.flattr.com/js/0.6/load.js?mode=auto';" + "t.parentNode.insertBefore(s, t);"
-        + "})();" + "/* ]]> */" + "</script>";
+                              + "/* <![CDATA[ */"
+                              + "(function() {"
+                              + "var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];"
+                              + "s.type = 'text/javascript';" + "s.async = true;" + "s.src = '" + flattrScheme
+                              + "api.flattr.com/js/0.6/load.js?mode=auto';" + "t.parentNode.insertBefore(s, t);"
+                              + "})();" + "/* ]]> */" + "</script>";
     String htmlMiddle = "</head> <body> <div align='center'>";
     String flattrHtml = "<a class='FlattrButton' style='display:none;' href='"
-        + projectUrl
-        + "' target='_blank'></a> <noscript><a href='"
-        + flattrScheme
-        + flattrUrl
-        + "' target='_blank'> <img src='"
-        + flattrScheme
-        + "api.flattr.com/button/flattr-badge-large.png' alt='Flattr this' title='Flattr this' border='0' /></a></noscript>";
+                        + projectUrl
+                        + "' target='_blank'></a> <noscript><a href='"
+                        + flattrScheme
+                        + flattrUrl
+                        + "' target='_blank'> <img src='"
+                        + flattrScheme
+                        + "api.flattr.com/button/flattr-badge-large.png' alt='Flattr this' title='Flattr this' border='0' /></a></noscript>";
     String htmlEnd = "</div> </body> </html>";
 
     String flattrCode = htmlStart + flattrJavascript + htmlMiddle + flattrHtml + htmlEnd;

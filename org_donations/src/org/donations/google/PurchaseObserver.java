@@ -40,12 +40,12 @@ import java.lang.reflect.Method;
 public abstract class PurchaseObserver {
   private static final String TAG = "PurchaseObserver";
   private final Activity mActivity;
-  private final Handler mHandler;
-  private Method mStartIntentSender;
-  private Object[] mStartIntentSenderArgs = new Object[5];
+  private final Handler  mHandler;
+  private       Method   mStartIntentSender;
+  private              Object[] mStartIntentSenderArgs  = new Object[5];
   @SuppressWarnings("rawtypes")
-  private static final Class[] START_INTENT_SENDER_SIG = new Class[]{IntentSender.class,
-      Intent.class, int.class, int.class, int.class};
+  private static final Class[]  START_INTENT_SENDER_SIG = new Class[] {IntentSender.class,
+                                                                       Intent.class, int.class, int.class, int.class};
 
   public PurchaseObserver(Activity activity, Handler handler) {
     mActivity = activity;
@@ -83,15 +83,15 @@ public abstract class PurchaseObserver {
    * received in {@link #onPurchaseStateChange(PurchaseState, String, int, long)}. This is used
    * for reporting various errors, or if the user backed out and didn't purchase the item. The
    * possible response codes are: RESULT_OK means that the order was sent successfully to the
-   * server. The onPurchaseStateChange() will be invoked later (with a purchase state of PURCHASED
+   * de.hwr.timetable.server.servlets.server. The onPurchaseStateChange() will be invoked later (with a purchase state of PURCHASED
    * or CANCELED) when the order is charged or canceled. This response code can also happen if an
-   * order for a Market-managed item was already sent to the server. RESULT_USER_CANCELED means
+   * order for a Market-managed item was already sent to the de.hwr.timetable.server.servlets.server. RESULT_USER_CANCELED means
    * that the user didn't buy the item. RESULT_SERVICE_UNAVAILABLE means that we couldn't connect
-   * to the Android Market server (for example if the data connection is down).
+   * to the Android Market de.hwr.timetable.server.servlets.server (for example if the data connection is down).
    * RESULT_BILLING_UNAVAILABLE means that in-app billing is not supported yet.
    * RESULT_ITEM_UNAVAILABLE means that the item this app offered for sale does not exist (or is
-   * not published) in the server-side catalog. RESULT_ERROR is used for any other errors (such as
-   * a server error).
+   * not published) in the de.hwr.timetable.server.servlets.server-side catalog. RESULT_ERROR is used for any other errors (such as
+   * a de.hwr.timetable.server.servlets.server error).
    */
   public abstract void onRequestPurchaseResponse(RequestPurchase request,
                                                  ResponseCode responseCode);
@@ -99,7 +99,7 @@ public abstract class PurchaseObserver {
   /**
    * This is called when we receive a response code from Android Market for a RestoreTransactions
    * request that we made. A response code of RESULT_OK means that the request was successfully
-   * sent to the server.
+   * sent to the de.hwr.timetable.server.servlets.server.
    */
   public abstract void onRestoreTransactionsResponse(RestoreTransactions request,
                                                      ResponseCode responseCode);
@@ -107,7 +107,7 @@ public abstract class PurchaseObserver {
   private void initCompatibilityLayer() {
     try {
       mStartIntentSender = mActivity.getClass().getMethod("startIntentSender",
-          START_INTENT_SENDER_SIG);
+                                                          START_INTENT_SENDER_SIG);
     } catch (SecurityException e) {
       mStartIntentSender = null;
     } catch (NoSuchMethodException e) {
@@ -157,7 +157,7 @@ public abstract class PurchaseObserver {
     mHandler.post(new Runnable() {
       public void run() {
         onPurchaseStateChange(purchaseState, itemId, orderId, purchaseTime,
-            developerPayload);
+                              developerPayload);
       }
     });
   }
