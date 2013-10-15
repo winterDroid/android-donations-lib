@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragment;
 import org.donations.google.BillingService;
 import org.donations.google.BillingService.RequestPurchase;
 import org.donations.google.BillingService.RestoreTransactions;
@@ -45,75 +45,22 @@ import org.donations.google.Consts.ResponseCode;
 import org.donations.google.PurchaseObserver;
 import org.donations.google.ResponseHandler;
 
-public class DonationsFragment extends SherlockFragment {
-  private DonatePurchaseObserver mDonatePurchaseObserver;
-  private Handler                mHandler;
-
-  private Spinner  mGoogleSpinner;
-  private TextView mFlattrUrl;
-
-  private BillingService mBillingService;
-
-  private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 1;
-  private static final int DIALOG_THANKS                   = 2;
-
+public class DonationsFragment extends Fragment {
+  private static final int      DIALOG_BILLING_NOT_SUPPORTED_ID = 1;
+  private static final int      DIALOG_THANKS                   = 2;
+  private static final String[] CATALOG_DEBUG                   = new String[] {"android.test.purchased",
+                                                                                "android.test.canceled", "android.test.refunded",
+                                                                                "android.test.item_unavailable"};
   /**
    * An array of product list entries for the products that can be purchased.
    */
-  private static String[] CATALOG;
-
-  private static final String[] CATALOG_DEBUG = new String[] {"android.test.purchased",
-                                                              "android.test.canceled", "android.test.refunded", "android.test.item_unavailable"};
-
-  private boolean mGoogleEnabled;
-
-  /**
-   * A {@link PurchaseObserver} is used to get callbacks when Android Market sends messages to
-   * this application so that we can update the UI.
-   */
-  private class DonatePurchaseObserver extends PurchaseObserver {
-    public DonatePurchaseObserver(Handler handler) {
-      super(getActivity(), handler);
-    }
-
-    @Override
-    public void onBillingSupported(boolean supported) {
-      Log.d(DonationsUtils.TAG, "supported: " + supported);
-      if (!supported) {
-        displayDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-      }
-    }
-
-    @Override
-    public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
-                                      final String orderId, long purchaseTime, String developerPayload) {
-      Log.d(DonationsUtils.TAG, "onPurchaseStateChange() itemId: " + itemId + " "
-                                + purchaseState);
-    }
-
-    @Override
-    public void onRequestPurchaseResponse(RequestPurchase request, ResponseCode responseCode) {
-      Log.d(DonationsUtils.TAG, request.mProductId + ": " + responseCode);
-      if (responseCode == ResponseCode.RESULT_OK) {
-        Log.d(DonationsUtils.TAG, "purchase was successfully sent to de.hwr.timetable.server.servlets.server");
-        displayDialog(DIALOG_THANKS);
-      } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
-        Log.d(DonationsUtils.TAG, "user canceled purchase");
-      } else {
-        Log.d(DonationsUtils.TAG, "purchase failed");
-      }
-    }
-
-    @Override
-    public void onRestoreTransactionsResponse(RestoreTransactions request,
-                                              ResponseCode responseCode) {
-      if (responseCode == ResponseCode.RESULT_OK) {
-        Log.d(DonationsUtils.TAG, "completed RestoreTransactions request");
-      } else {
-        Log.d(DonationsUtils.TAG, "RestoreTransactions error: " + responseCode);
-      }
-    }
-  }
+  private static String[]               CATALOG;
+  private        DonatePurchaseObserver mDonatePurchaseObserver;
+  private        Handler                mHandler;
+  private        Spinner                mGoogleSpinner;
+  private        TextView               mFlattrUrl;
+  private        BillingService         mBillingService;
+  private        boolean                mGoogleEnabled;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -425,5 +372,53 @@ public class DonationsFragment extends SherlockFragment {
     // has to be called AFTER loadData
     // http://stackoverflow.com/questions/5003156/android-webview-style-background-colortransparent-ignored-on-android-2-2
     mFlattrWebview.setBackgroundColor(0x00000000);
+  }
+
+  /**
+   * A {@link PurchaseObserver} is used to get callbacks when Android Market sends messages to
+   * this application so that we can update the UI.
+   */
+  private class DonatePurchaseObserver extends PurchaseObserver {
+    public DonatePurchaseObserver(Handler handler) {
+      super(getActivity(), handler);
+    }
+
+    @Override
+    public void onBillingSupported(boolean supported) {
+      Log.d(DonationsUtils.TAG, "supported: " + supported);
+      if (!supported) {
+        displayDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
+      }
+    }
+
+    @Override
+    public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
+                                      final String orderId, long purchaseTime, String developerPayload) {
+      Log.d(DonationsUtils.TAG, "onPurchaseStateChange() itemId: " + itemId + " "
+                                + purchaseState);
+    }
+
+    @Override
+    public void onRequestPurchaseResponse(RequestPurchase request, ResponseCode responseCode) {
+      Log.d(DonationsUtils.TAG, request.mProductId + ": " + responseCode);
+      if (responseCode == ResponseCode.RESULT_OK) {
+        Log.d(DonationsUtils.TAG, "purchase was successfully sent to de.hwr.timetable.server.servlets.server");
+        displayDialog(DIALOG_THANKS);
+      } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) {
+        Log.d(DonationsUtils.TAG, "user canceled purchase");
+      } else {
+        Log.d(DonationsUtils.TAG, "purchase failed");
+      }
+    }
+
+    @Override
+    public void onRestoreTransactionsResponse(RestoreTransactions request,
+                                              ResponseCode responseCode) {
+      if (responseCode == ResponseCode.RESULT_OK) {
+        Log.d(DonationsUtils.TAG, "completed RestoreTransactions request");
+      } else {
+        Log.d(DonationsUtils.TAG, "RestoreTransactions error: " + responseCode);
+      }
+    }
   }
 }

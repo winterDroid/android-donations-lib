@@ -17,9 +17,9 @@
 package org.donations;
 
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v4.app.FragmentActivity;
 
-public class DonationsActivity extends SherlockFragmentActivity {
+public class DonationsActivity extends FragmentActivity {
 
   /**
    * Called when the activity is first created.
