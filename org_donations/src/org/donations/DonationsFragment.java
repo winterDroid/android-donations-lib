@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +35,7 @@ import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.*;
+import com.actionbarsherlock.app.SherlockFragment;
 import org.donations.google.BillingService;
 import org.donations.google.BillingService.RequestPurchase;
 import org.donations.google.BillingService.RestoreTransactions;
@@ -45,7 +45,7 @@ import org.donations.google.Consts.ResponseCode;
 import org.donations.google.PurchaseObserver;
 import org.donations.google.ResponseHandler;
 
-public class DonationsFragment extends Fragment {
+public class DonationsFragment extends SherlockFragment {
   private static final int      DIALOG_BILLING_NOT_SUPPORTED_ID = 1;
   private static final int      DIALOG_THANKS                   = 2;
   private static final String[] CATALOG_DEBUG                   = new String[] {"android.test.purchased",
